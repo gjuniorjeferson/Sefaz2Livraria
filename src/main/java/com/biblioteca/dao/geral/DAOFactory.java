@@ -3,6 +3,7 @@ package com.biblioteca.dao.geral;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import com.biblioteca.dao.LivroDAO;
 import com.biblioteca.dao.UsuarioDAO;
 import com.biblioteca.modelo.*; //importar os modelos aqui
 
@@ -21,6 +22,11 @@ public abstract class DAOFactory {
 	
 	public static UsuarioDAO getUsuarioDAO(){
 		UsuarioDAO  dao = new UsuarioDAO(factory);
+		return dao;
+	}
+	
+	public static LivroDAO getLivroDAO() {
+		LivroDAO dao = new LivroDAO(factory);
 		return dao;
 	}
 	

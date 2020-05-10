@@ -9,7 +9,7 @@
 	<name>Biblioteca Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -43,9 +43,14 @@
 			<artifactId>jsf-impl</artifactId>
 			<version>2.2.13</version>
 		</dependency>
-		
-		<!-- FALTA CONFIGURAR AS DEPENDENCIAS WEB!!! -->
-		
+
+		<!-- PRIMEFACES -->
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>7.0</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>Biblioteca</finalName>
