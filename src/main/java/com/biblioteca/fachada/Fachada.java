@@ -56,6 +56,7 @@ public class Fachada {
     	return usuarioRN.PesquisarTodosOsUsuarios(); 	
     }
     
+	/* Livro */
     
     /**
      * Salva um novo Livro no banco de dados
@@ -65,4 +66,22 @@ public class Fachada {
     public void salvarNovolivro(Livro livro)throws Exception{
     	livroRN.inserirNovo(livro);
     }
+    
+	/**
+	 * Consultar todos os livros do banco de dados
+	 * @return List<Livro> Lista contendo todos os dados da tabela livro
+	 */
+    public List<Livro> listarTodosOsLivros(){
+    	return livroRN.listarTodosOsLivros();
+    }
+    
+    /***
+     * Excluir livro da base de dados
+     * @param livro a ser excluido
+     */
+    
+    public void excluirLivro(Livro livro) {
+    	livroRN.excluir(livro);
+    }
+    
 }

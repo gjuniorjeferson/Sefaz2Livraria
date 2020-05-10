@@ -6,44 +6,79 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Estados</title>
+	<title>Livros</title>
 </h:head>
 <h:body>
-
-	<p:growl id="mensagem"/>
-	<h:form>
+	<!-- COMPONENTE DE MENSAGEM DA TELA -->
+	<p:growl id="mensagem" />
+	<h:form id="formularioLivro">
 		<p:panel header="Livros">
-			<p:button value="Sair"></p:button>
-			<p:dataTable emptyMessage="Nenhum registro encontrado."
-				paginator="true">
-				<f:facet name="header">
-					<p:commandButton value="Novo" actionListener="#{listaLivroBean.novo()}" oncomplete="PF('dialogo').show()" update=":formCadastro:camposLivro" />
-				</f:facet>
+			<!-- MENU RETANGULAR ACIMA DA TABELA -->
+			<p:megaMenu>
+				<p:menuitem value="Novo Livro"
+					actionListener="#{listaLivroBean.novo}"
+					oncomplete="PF('dialogo').show()"
+					update=":formCadastro:camposLivro" icon="pi pi-plus" />
+				<p:menuitem value="Sair" url="http://www.primefaces.org"
+					icon="pi pi-sign-out" />
+			</p:megaMenu>
 
-				<p:column headerText="Codigo">
+			<p:dataTable id="tabelaLivro" emptyMessage="Nenhum registro encontrado."
+				paginator="true" value="#{listaLivroBean.livros}" var="cursorLivro"
+				rows="5">
+
+				<p:column headerText="Código" sortBy="#{cursorLivro.codigo}">
+					<h:outputText value="#{cursorLivro.codigo}" />
 				</p:column>
 
-				<p:column headerText="Titulo">
+				<p:column headerText="Título" filterBy="#{cursorLivro.titulo}">
+					<h:outputText value="#{cursorLivro.titulo}" />
 				</p:column>
 
-				<p:column headerText="Autor">
+				<p:column headerText="Categoria" sortBy="#{cursorLivro.categoria}">
+					<h:outputText value="#{cursorLivro.categoria}" />
 				</p:column>
+
+				<p:column headerText="Autor" sortBy="#{cursorLivro.autor}">
+					<h:outputText value="#{cursorLivro.autor}" />
+				</p:column>
+				
+				<!-- BOTAO EXCLUIR -->
+				<p:column headerText="Opções">
+					<p:commandButton icon="pi pi-trash" actionListener="#{listaLivroBean.excluir}" update=":mensagem :formularioLivro:tabelaLivro">
+						<p:confirm header="Confirmação" message="Deseja Excluir?" icon="pi pi-exclamation-triangle"/>
+						<f:attribute name="livroSelecionado" value="#{cursorLivro}" />
+					</p:commandButton>
+				</p:column>
+				
 			</p:dataTable>
+			<!-- CAIXA DE DIALOGO EXCLUIR -->		
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="Button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+				<p:commandButton value="Não" type="Button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+			</p:confirmDialog>
 		</p:panel>
 	</h:form>
-
+	
+	<!-- FORMULARIO DE CADASTRO -->
 	<p:dialog header="Cadastro de livros" widgetVar="dialogo"
 		draggable="false" resizable="false" modal="true">
 		<h:form id="formCadastro">
 			<p:panelGrid columns="2" id="camposLivro">
-				<p:outputLabel value="Titulo: "/>
-				<p:inputText size="30" maxlength="50" value="#{listaLivroBean.livro.titulo}"/>
-				<p:outputLabel value="Autor: "/>
-				<p:inputText size="30" maxlenght="50" value="#{listaLivroBean.livro.autor}"/>
+				<p:outputLabel value="Titulo: " />
+				<p:inputText size="30" maxlength="50"
+					value="#{listaLivroBean.livro.titulo}" />
+				<p:outputLabel value="Categoria: " />
+				<p:inputText size="30" maxlenght="50"
+					value="#{listaLivroBean.livro.categoria}" />
+				<p:outputLabel value="Autor: " />
+				<p:inputText size="30" maxlenght="50"
+					value="#{listaLivroBean.livro.autor}" />
 			</p:panelGrid>
 			<h:panelGrid columns="2">
-				<p:commandButton value="Salvar" actionListener="#{listaLivroBean.salvar()}" update=":mensagem"/>
-				<p:commandButton value="Fechar" oncomplete="PF('dialogo').hide()" />			
+				<p:commandButton value="Salvar"
+					actionListener="#{listaLivroBean.salvar}" update=":mensagem :formularioLivro:tabelaLivro" />
+				<p:commandButton value="Fechar" oncomplete="PF('dialogo').hide()" />
 			</h:panelGrid>
 		</h:form>
 	</p:dialog>

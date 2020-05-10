@@ -3,6 +3,8 @@
  */
 package com.biblioteca.modelo.rn;
 
+import java.util.List;
+
 import com.biblioteca.dao.LivroDAO;
 import com.biblioteca.dao.geral.DAOFactory;
 import com.biblioteca.modelo.Livro;
@@ -24,6 +26,14 @@ public class LivroRN {
 	public void inserirNovo(Livro l) throws Exception{
 		validarCampos(l);
 		livroDAO.insert(l);		
+	}
+
+	public List<Livro> listarTodosOsLivros(){
+		return livroDAO.getAll();
+	}
+	
+	public void excluir(Livro livro) {
+		livroDAO.remove(livro);
 	}
 	
 	public void validarCampos(Livro livro) throws Exception{
