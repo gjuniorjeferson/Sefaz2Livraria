@@ -84,4 +84,12 @@ public class Fachada {
     	livroRN.excluir(livro);
     }
     
+    public void editarLivro(Livro livro) {
+    	livroRN.editarLivro(livro);
+    }
+    
+    public void mergeLivro(Livro livro) {
+    	livroRN.mergeLivro(livro);
+    }
+    
 }

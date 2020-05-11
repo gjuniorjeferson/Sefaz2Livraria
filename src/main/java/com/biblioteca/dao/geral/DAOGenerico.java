@@ -17,7 +17,6 @@ import javax.persistence.PersistenceException;
 
 public abstract class DAOGenerico<Entity> {
 	
-	
 	private EntityManagerFactory entityManagerFactory;
 	private Class<Entity> persistentClass;
 
@@ -59,7 +58,7 @@ public abstract class DAOGenerico<Entity> {
 			instance = ((List<Entity>) em.createQuery(
 					"from " + getPersistentClass().getName()).getResultList());
 		} catch (RuntimeException re) {
-			re.printStackTrace();
+			re.printStackTrace();			
 		}
 		em.close();
 		return instance;
@@ -145,7 +144,7 @@ public abstract class DAOGenerico<Entity> {
 	}
 
 	/**
-	 * Atualiza o objeto que se encontra em mem�ria.
+	 * Atualiza o objeto que se encontra em memoria.
 	 * 
 	 * @param object objeto a ser atualizado
 	 */

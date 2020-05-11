@@ -43,10 +43,16 @@
 					<h:outputText value="#{cursorLivro.autor}" />
 				</p:column>
 				
-				<!-- BOTAO EXCLUIR -->
 				<p:column headerText="Opções">
+					<!-- BOTAO EXCLUIR -->
 					<p:commandButton icon="pi pi-trash" actionListener="#{listaLivroBean.excluir}" update=":mensagem :formularioLivro:tabelaLivro">
 						<p:confirm header="Confirmação" message="Deseja Excluir?" icon="pi pi-exclamation-triangle"/>
+					<!-- CAPTURA A LINHA SELECIONADA E ENVIA O OBJETO PARA O DAO EXCLUIR, ACTION EVENT DA MANAGED BEAN -->
+						<f:attribute name="livroSelecionado" value="#{cursorLivro}" />
+					</p:commandButton>
+					<!-- BOTAO EDITAR -->
+					<p:commandButton icon="pi pi-pencil" actionListener="#{listaLivroBean.editar}" update=":formCadastro:camposLivro" oncomplete="PF('dialogo').show();">
+						
 						<f:attribute name="livroSelecionado" value="#{cursorLivro}" />
 					</p:commandButton>
 				</p:column>

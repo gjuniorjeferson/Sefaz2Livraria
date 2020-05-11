@@ -21,11 +21,14 @@ import com.biblioteca.modelo.Livro;
  *
  */
 
-@SuppressWarnings("serial")
 @ManagedBean(name="listaLivroBean")
 @ViewScoped
 public class ListaLivroBean implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<Livro> livros;
 	private Livro livro;
 	
@@ -54,27 +57,20 @@ public class ListaLivroBean implements Serializable{
 			livros = Fachada.getInstancia().listarTodosOsLivros();
 		}
 		catch (RuntimeException re) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_FATAL, "Erro ao consultar livros da base de dados"+re.getMessage(),null);
-			FacesContext contexto = FacesContext.getCurrentInstance();
-			contexto.addMessage(null, message);
 			re.printStackTrace();
 		}
 	}
 	
 	public void salvar() {
 		try {
-			Fachada.getInstancia().salvarNovolivro(livro);
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Livro salvo com Sucesso!!!","testeeeeee");
-			FacesContext contexto = FacesContext.getCurrentInstance();
-			contexto.addMessage(null, message);
+			//Fachada.getInstancia().salvarNovolivro(livro);
+			Fachada.getInstancia().mergeLivro(livro);
+			mostrarMensagemInfo("Salvo/Editado com sucesso");
 			Livro livro = new Livro();
 			livros = Fachada.getInstancia().listarTodosOsLivros();
 		} catch (Exception e) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, ("Não foi Possível concluir a operação: "+e.getMessage()),null);
-			FacesContext contexto = FacesContext.getCurrentInstance();
-			contexto.addMessage(null, message);		
+			mostrarMensagemErro(e.getMessage());
 		}
-		
 	}
 	
 	public void excluir(ActionEvent event) {
@@ -83,14 +79,36 @@ public class ListaLivroBean implements Serializable{
 			Fachada.getInstancia().excluirLivro(livro);
 			livros = Fachada.getInstancia().listarTodosOsLivros();
 		}catch (RuntimeException re) {
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Não foi possível concluir a solicitação: " + re.getMessage(),null);
-			FacesContext contexto = FacesContext.getCurrentInstance();
-			contexto.addMessage(null, message);	
+			mostrarMensagemErro(re.getMessage());
 			re.printStackTrace();
 		}
 
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Excluido com sucesso",null);
-		FacesContext contexto = FacesContext.getCurrentInstance();
-		contexto.addMessage(null, message);		
+		mostrarMensagemInfo("Excluido com sucesso!");
 	}
+	
+	public void editar(ActionEvent event) {
+		livro = (Livro) event.getComponent().getAttributes().get("livroSelecionado");
+		try {
+			Fachada.getInstancia().editarLivro(livro);
+			livros = Fachada.getInstancia().listarTodosOsLivros();
+		}catch (RuntimeException re) {
+			re.printStackTrace();
+		}
+
+		mostrarMensagemInfo("Atualizado com sucesso");
+		
+	}
+	
+	private void mostrarMensagemInfo(String mensagem) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, mensagem,null);
+		FacesContext contexto = FacesContext.getCurrentInstance();
+		contexto.addMessage(null, message);	
+	}
+	
+	private void mostrarMensagemErro(String mensagem) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, mensagem,null);
+		FacesContext contexto = FacesContext.getCurrentInstance();
+		contexto.addMessage(null, message);	
+	}
+	
 }

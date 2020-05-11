@@ -3,55 +3,81 @@
  */
 package com.biblioteca.controle;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.PrimeFaces;
+import com.biblioteca.fachada.Fachada;
+import com.biblioteca.modelo.Usuario;
 
 /**
  * @author Jeferson
  *
  */
 
-@ManagedBean(name = "loginBean")
+@ManagedBean(name="loginBean")
+@ViewScoped
 public class LoginBean {
-
-	private String username;
-
-	private String password;
-
-	public String getUsername() {
-		return username;
+	
+	private Usuario usuario;
+	
+	public Usuario getUsuario() {
+		return usuario;
 	}
-
-	public void setUsername(String username) {
-		this.username = username;
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
-
-	public String getPassword() {
-		return password;
+	
+	public void novo() {
+		usuario = new Usuario();
 	}
-
-	public void setPassword(String password) {
-		this.password = password;
+	
+	public void cadastrarNovoUsuario() {
+		
+		try {
+			Fachada.getInstancia().salvarNovoUsuario(usuario);
+			mostrarMensagemInfo("Usuario Salvo com sucesso");
+		} catch (Exception e) {
+			mostrarMensagemErro("Erro"+ e.getMessage());
+			e.printStackTrace();
+		}	
 	}
-
+	
+	@PostConstruct
+	public void initPage() {
+		usuario = new Usuario();
+	}
+	
 	public void login() {
-        FacesMessage message = null;
-        boolean loggedIn = false;
-         
-        if(username != null && username.equals("admin") && password != null && password.equals("admin")) {
-            loggedIn = true;
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", username);
-        } else {
-            loggedIn = false;
-            message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-        }
-         
-        FacesContext.getCurrentInstance().addMessage(null, message);
-        PrimeFaces.current().ajax().addCallbackParam("loggedIn", loggedIn);
+
+		Usuario usuarioCadastrado = new Usuario();
+		try {
+			System.out.println("CPF informado: " + usuario.getCpf_usuario());
+			usuarioCadastrado = Fachada.getInstancia().pesquisarUsuarioPorChave(usuario.getCpf_usuario());
+			if (usuarioCadastrado.getSenha().equals(usuario.getSenha())) {
+				System.out.println("login!!!");
+				FacesContext.getCurrentInstance().getExternalContext().redirect("/Biblioteca/faces/listaLivro.xhtml");
+			}
+		} catch (Exception e) {
+			System.out.println("Caiu na Exception");
+			mostrarMensagemErro(e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
 	
+	private void mostrarMensagemInfo(String mensagem) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, mensagem,null);
+		FacesContext contexto = FacesContext.getCurrentInstance();
+		contexto.addMessage(null, message);	
+	}
 	
+	private void mostrarMensagemErro(String mensagem) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, mensagem,null);
+		FacesContext contexto = FacesContext.getCurrentInstance();
+		contexto.addMessage(null, message);	
 	}
 }
